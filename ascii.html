@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+
+  <h2>Ascii Art Web</h2>
+
+  <p>Select an option from the menu and type your text into the text box</p>
+
+
+  <section>
+    <form method="post" action="/ascii-art">
+      <select id="options" name="ascii" size="3">
+        <p>
+          <label for="options">Choose an option:</label>
+
+          <option value="standard">standard</option>
+          <option value="shadow">shadow</option>
+          <option value="thinkertoy">thinkertoy</option>
+      </select><br><br>
+      </p>
+      <p>
+        <label for="textarea"></label>
+
+        <textarea id="textarea" name="textarea" value={{.TextArea}} rows="5" cols="45">{{.TextArea}}</textarea>
+      <pre></pre>
+  </section>
+  <section>
+    <p>
+      <button type="submit">Submit</button>
+    </p>
+
+    <div>
+
+      <pre id="output" name="output" rows="20" cols="200">{{printf "%s" .Output}}</pre>
+    </div>
+
+  </section>
+  </form>
+</body>
+
+</html>
