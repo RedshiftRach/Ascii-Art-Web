@@ -101,6 +101,11 @@ func processposthandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Banner returns a file containing the ASCII art banner based on the specified style.
+// The style parameter specifies the name of the style to use for the banner.
+// It opens the corresponding banner file from the "text" directory and returns the file.
+// If the banner file is not found or if no style is provided, it panics with a 404 error message.
+// The returned file can be used to read the ASCII art banner.
 func Banner(style string) (file *os.File, err error) {
 	b, err := os.Open(fmt.Sprintf("text/%s.txt", style))
 	if err != nil {
@@ -149,6 +154,9 @@ func Print(str string, banner map[rune][]string) string {
 	return output
 
 }
+
+// Split splits the input string into multiple lines based on the "\r\n" delimiter.
+// It returns a slice of strings, where each element represents a line of the input string.
 func Split(str string) []string {
 	answer := ""
 
