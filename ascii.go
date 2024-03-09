@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"html/template"
 	"io"
 	"net/http"
@@ -51,7 +52,7 @@ func renderTemplate(w http.ResponseWriter, r *http.Request) {
 }
 
 func processposthandler(w http.ResponseWriter, r *http.Request) {
-
+	r.ParseForm()
 	s.TextArea = r.FormValue("textarea")
 
 	s.Ascii = r.FormValue("ascii")
@@ -68,7 +69,6 @@ func processposthandler(w http.ResponseWriter, r *http.Request) {
 	default:
 		s.Ascii = "standard"
 	}
-	r.ParseForm()
 
 	var style string = s.Ascii
 
@@ -78,7 +78,7 @@ func processposthandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data := Banner(style)
+	data, _ := Banner(style)
 	output := s.TextArea
 	bannerMap := Array(data)
 
@@ -101,13 +101,12 @@ func processposthandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func Banner(style string) *os.File {
-	b, err := os.Open("./text/" + style + ".txt")
+func Banner(style string) (file *os.File, err error) {
+	b, err := os.Open(fmt.Sprintf("text/%s.txt", style))
 	if err != nil {
 		panic("404 the banner file has not been found or you did not send any data\ntry to start from localhost:8080")
 	}
-
-	return b
+	return b, err
 }
 
 func Array(file *os.File) map[rune][]string {
@@ -131,27 +130,25 @@ func Array(file *os.File) map[rune][]string {
 }
 
 func Print(str string, banner map[rune][]string) string {
+	output := ""
 	list := Split(str)
-	ascii_output := ""
-	Dec := 10
-
 	for _, word := range list {
 		if word == "" {
-			ascii_output = ascii_output + string(rune(Dec))
+			output += string(rune(10))
 		} else {
 			for i := 0; i < 8; i++ {
 				line := ""
 				for _, r := range word {
-					line = line + banner[r][i]
+					line += banner[r][i]
 				}
-				ascii_output = ascii_output + line + string(rune(Dec))
+				output += line + string(rune(10))
 			}
 		}
 	}
 
-	return ascii_output
-}
+	return output
 
+}
 func Split(str string) []string {
 	answer := ""
 
@@ -159,7 +156,7 @@ func Split(str string) []string {
 
 	for _, j := range b {
 		if j == "" {
-			answer += "\n"
+			answer += string(rune(10))
 		}
 	}
 	return b
